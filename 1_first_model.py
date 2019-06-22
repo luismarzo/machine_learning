@@ -1,10 +1,14 @@
 import pandas as pd
-from sklearn.tree import DecisionTreeRegressor
+from sklearn.tree import DecisionTreeRegressor    #make the model
+from sklearn.metrics import mean_absolute_error   #validate the model (it says us the error)
 
 # save filepath to variable for easier access
 file_path = '/home/luis/ws_machine_learning/machine_learning/ejemplo.csv'
 
-data = pd.read_csv(file_path)
+data_raw = pd.read_csv(file_path)
+
+#Filter the list. It eliminates void rows
+data = data_raw.dropna(axis=0)
 
 #describe the data, the number of elements, desviacion tipica, etc
 print(data.describe())
@@ -14,7 +18,7 @@ print(data.head())
 
 print(data.columns)
 
-#selecting the predition target
+#selecting the prediction target
 y=data.longitude
 
 #Chosing features
@@ -34,7 +38,16 @@ model = DecisionTreeRegressor(random_state=1)
 model.fit(X,y)
 #Prediction
 print('-----------prediction----------')
-print(model.predict(X))
+prediction = model.predict(X)
+print(prediction)
+
+#See the error
+MAE = mean_absolute_error(y,prediction)
+print(MAE)
+
+#But the problem is that you are validating your model with the same data that you used before to build it, so this is wrong.
+#We have to use a validation data, we have to save some data, build the model, and later validate it with this data that we dint use to build the model.
+
 
 
 
