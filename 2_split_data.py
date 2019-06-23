@@ -19,6 +19,7 @@ y=data.longitude
 features = ['district' , 'latitude' , 'ucr_ncic_code']
 X = data[features]
 
+#split the data into 2 groups for validate the model. We will validate it with diferent data
 train_X, val_X, train_y, val_y = train_test_split(X, y, random_state = 0)
 model = DecisionTreeRegressor()
 model.fit(train_X , train_y)
