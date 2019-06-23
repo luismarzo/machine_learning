@@ -15,7 +15,7 @@ from sklearn.ensemble import RandomForestRegressor
 
 def main():
     # save filepath to variable for easier access
-    file_path = '/home/luis/ws_machine_learning/machine_learning/ejemplo.csv'
+    file_path = '/home/luis/ws_machine_learning/machine_learning/basic/ejemplo.csv'
 
     data_raw = pd.read_csv(file_path)
 
@@ -29,7 +29,7 @@ def main():
     features = ['district', 'latitude', 'ucr_ncic_code']
     X = data[features]
     # split the data into 2 groups for validate the model. We will validate it with diferent data
-    train_X, val_X, train_y, val_y = train_test_split(X, y, random_state=0)
+    train_X, val_X, train_y, val_y = train_test_split(X, y, random_state=0, train_size=0.8, test_size=0.2)
     # leafs of the tree
     candidate_max_leaf_nodes = [5, 25, 50, 100, 250, 500]
 

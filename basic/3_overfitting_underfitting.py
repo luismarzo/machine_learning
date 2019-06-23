@@ -17,7 +17,7 @@ from sklearn.model_selection import train_test_split
 
 def main():
     # save filepath to variable for easier access
-    file_path = '/home/luis/ws_machine_learning/machine_learning/ejemplo.csv'
+    file_path = '/home/luis/ws_machine_learning/machine_learning/basic/ejemplo.csv'
 
     data_raw = pd.read_csv(file_path)
 
