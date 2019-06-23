@@ -1,10 +1,6 @@
-# overfitting, where a model matches the training data almost perfectly, but does poorly in validation and other new data.
-# On the flip side, if we make our tree very shallow, it doesn't divide up the houses into very distinct groups.
-
-# At an extreme, if a tree divides houses into only 2 or 4, each group still has a wide variety of houses.
-# Resulting predictions may be far off for most houses, even in the training data (and it will be bad in validation too for the same reason).
-# When a model fails to capture important distinctions and patterns in the data, so it performs poorly even in training data,
-# that is called underfitting.
+#The random forest uses many trees, and it makes a prediction by averaging the predictions 
+#of each component tree. It generally has much better predictive accuracy than a single 
+#decision tree and it works well with default parameters
 
 import numpy as np
 import pandas as pd
@@ -13,6 +9,8 @@ from sklearn.tree import DecisionTreeRegressor  # make the model
 from sklearn.metrics import mean_absolute_error
 # split data into training and validation data, for both features and target
 from sklearn.model_selection import train_test_split
+# Using new model
+from sklearn.ensemble import RandomForestRegressor
 
 
 def main():
@@ -37,12 +35,25 @@ def main():
 
     best_tree_size = get_best_leaf(
         candidate_max_leaf_nodes, train_X, val_X, train_y, val_y)
-    print(best_tree_size)
+    #print(best_tree_size)
     
     # For the final model, now you are going to use ALL the data that you have so:
     model = DecisionTreeRegressor(
         max_leaf_nodes=best_tree_size, random_state=0)
     model.fit(train_X, train_y)
+    val_predict = model.predict(val_X)
+    decision_mae=mean_absolute_error(val_predict,val_y)
+    print("Validation MAE for best value of DecisionTreeRegressor:", decision_mae)
+
+    # Now we are going to do a RandomForest model
+    model = RandomForestRegressor(random_state=0)
+    model.fit(train_X, train_y)
+    val_predict = model.predict(val_X)
+    decision_mae=mean_absolute_error(val_predict,val_y)
+    print("Validation MAE for best value of RandomTreeRegressor:", decision_mae)    
+
+
+    
 
 
 def get_best_leaf(candidate_max_leaf_nodes, train_X, val_X, train_y, val_y):
@@ -52,7 +63,7 @@ def get_best_leaf(candidate_max_leaf_nodes, train_X, val_X, train_y, val_y):
     cnt = 0
     # Using all the leafs and getting in a vector the MAE
     for max_leaf_nodes in candidate_max_leaf_nodes:
-        cnt_mae[cnt] = get_mae(max_leaf_nodes, train_X, val_X, train_y, val_y)
+        cnt_mae[cnt] = get_mae_leafs(max_leaf_nodes, train_X, val_X, train_y, val_y)
         cnt = cnt+1
 
     # Result of the leaf with least MAE
@@ -62,7 +73,7 @@ def get_best_leaf(candidate_max_leaf_nodes, train_X, val_X, train_y, val_y):
     return(best_tree_size)
 
 
-def get_mae(max_leaf_nodes, train_X, val_X, train_y, val_y):
+def get_mae_leafs(max_leaf_nodes, train_X, val_X, train_y, val_y):
     model = DecisionTreeRegressor(
         max_leaf_nodes=max_leaf_nodes, random_state=0)
     model.fit(train_X, train_y)
